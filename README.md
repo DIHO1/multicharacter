@@ -26,10 +26,3 @@
 7. Przy kolejnych aktualizacjach powtarzaj kroki 4–6 (zaktualizuj wiadomość commita zgodnie ze zmianami).
 
 > Jeśli repozytorium na GitHubie jest już zainicjowane z plikami (np. README), zanim wykonasz `git push`, pobierz je lokalnie poleceniem `git pull --rebase origin main`, aby uniknąć konfliktów.
-
-## Udostępnianie projektu w rozmowie (na chacie)
-1. Wykonaj kroki z sekcji powyżej, aby projekt znalazł się na GitHubie.
-2. Otwórz stronę repozytorium w przeglądarce i skopiuj adres URL z paska adresu (np. `https://github.com/twoj-uzytkownik/twoje-repo`).
-3. Wklej skopiowany link w wiadomości na chacie – rozmówca będzie mógł przejść bezpośrednio do repozytorium.
-4. Jeśli repozytorium jest prywatne, dodaj rozmówcę jako współpracownika w ustawieniach GitHub (`Settings` → `Collaborators`), aby miał dostęp.
-5. Alternatywnie możesz przygotować archiwum `.zip` projektu (GitHub udostępnia przycisk **Code → Download ZIP**) i przesłać je poprzez funkcję udostępniania plików dostępnych w danym komunikatorze.

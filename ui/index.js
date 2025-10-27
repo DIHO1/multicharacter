@@ -50,6 +50,15 @@ if (!ensureRootAndContainers()) {
   }, { once: true });
 }
 
+const root = document.getElementById('root');
+const lists = {};
+POS.forEach(id => {
+  const ul = document.createElement('ul');
+  ul.id = id; ul.className = 'notification-container';
+  root.appendChild(ul);
+  lists[id] = ul;
+});
+
 function iconSVG(type='info'){
   const path = ICONS[type] || ICONS.info;
   return `
@@ -60,6 +69,7 @@ function iconSVG(type='info'){
 }
 
 function push({type='info', title='Powiadomienie', message='', length=3000, position='top-right', sound=true}){
+
   if (!ensureRootAndContainers()) {
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', () => push({ type, title, message, length, position, sound }), { once: true });
