@@ -14,6 +14,42 @@ const ICONS = {
 
 const POS = ['top-right','top-left','top-middle','bottom-right','bottom-left','bottom-middle','middle-right','middle-left'];
 
+let root = document.getElementById('root');
+const lists = {};
+
+function ensureRootAndContainers() {
+  if (!root) {
+    root = document.getElementById('root');
+  }
+
+  if (!root && document.readyState !== 'loading') {
+    root = document.createElement('div');
+    root.id = 'root';
+    (document.body || document.documentElement).appendChild(root);
+  }
+
+  if (!root) {
+    return false;
+  }
+
+  if (!Object.keys(lists).length) {
+    POS.forEach(id => {
+      const ul = document.createElement('ul');
+      ul.id = id; ul.className = 'notification-container';
+      root.appendChild(ul);
+      lists[id] = ul;
+    });
+  }
+
+  return true;
+}
+
+if (!ensureRootAndContainers()) {
+  document.addEventListener('DOMContentLoaded', () => {
+    ensureRootAndContainers();
+  }, { once: true });
+}
+
 const root = document.getElementById('root');
 const lists = {};
 POS.forEach(id => {
@@ -33,6 +69,13 @@ function iconSVG(type='info'){
 }
 
 function push({type='info', title='Powiadomienie', message='', length=3000, position='top-right', sound=true}){
+
+  if (!ensureRootAndContainers()) {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => push({ type, title, message, length, position, sound }), { once: true });
+    }
+    return;
+  }
   if(!POS.includes(position)) position = 'top-right';
   const li = document.createElement('li');
 
