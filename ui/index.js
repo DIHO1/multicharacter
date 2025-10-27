@@ -1,8 +1,15 @@
 const COLORS = {
-  success: {main:'#22c55e', border:'rgba(34,197,94,.35)', bg:'rgba(34,197,94,.12)'},
-  error:   {main:'#ef4444', border:'rgba(239,68,68,.35)', bg:'rgba(239,68,68,.12)'},
-  info:    {main:'#3b82f6', border:'rgba(59,130,246,.35)', bg:'rgba(59,130,246,.12)'},
-  warning: {main:'#f59e0b', border:'rgba(245,158,11,.35)', bg:'rgba(245,158,11,.12)'}
+  success: { main: '#22c55e', border: 'rgba(34,197,94,.35)', bg: 'rgba(34,197,94,.12)' },
+  error:   { main: '#ef4444', border: 'rgba(239,68,68,.35)', bg: 'rgba(239,68,68,.12)' },
+  info:    { main: '#3b82f6', border: 'rgba(59,130,246,.35)', bg: 'rgba(59,130,246,.12)' },
+  warning: { main: '#f59e0b', border: 'rgba(245,158,11,.35)', bg: 'rgba(245,158,11,.12)' }
+};
+
+const ICONS = {
+  success: '<path d="M6 12.5l3.5 3.5L18 7.5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke="currentColor"/>',
+  error:   '<path d="M15 9l-6 6M9 9l6 6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke="currentColor"/>',
+  info:    '<path d="M12 17v-4m0-4h.01" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke="currentColor"/>',
+  warning: '<path d="M12 8.5v4m0 4h.01" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke="currentColor"/><path d="M10.2 5.5h3.6a2 2 0 0 1 1.73 1l3.2 5.5a2 2 0 0 1 0 2l-3.2 5.5a2 2 0 0 1-1.73 1h-3.6a2 2 0 0 1-1.73-1l-3.2-5.5a2 2 0 0 1 0-2l3.2-5.5a2 2 0 0 1 1.73-1z" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" fill="none" stroke="currentColor"/>'
 };
 
 const POS = ['top-right','top-left','top-middle','bottom-right','bottom-left','bottom-middle','middle-right','middle-left'];
@@ -16,10 +23,12 @@ POS.forEach(id => {
   lists[id] = ul;
 });
 
-function iconSVG(color='#111827'){
+function iconSVG(type='info'){
+  const path = ICONS[type] || ICONS.info;
   return `
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="${color}" aria-hidden="true">
-    <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1 14-4-4 1.4-1.4L11 12.2l4.6-4.6L17 9l-6 7z"/>
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <circle cx="12" cy="12" r="9" stroke-width="1.4" fill="none" stroke="currentColor"/>
+    ${path}
   </svg>`;
 }
 
@@ -27,18 +36,19 @@ function push({type='info', title='Powiadomienie', message='', length=3000, posi
   if(!POS.includes(position)) position = 'top-right';
   const li = document.createElement('li');
 
-  const color = COLORS[type] || COLORS.info;
+  const variant = COLORS[type] ? type : 'info';
+  const color = COLORS[variant];
   li.innerHTML = `
-    <div class="notify" role="status" aria-live="polite">
+    <div class="notify" role="status" aria-live="polite" data-variant="${variant}" style="--notify-accent:${color.main};--notify-border:${color.border};--notify-badge:${color.bg}">
       <div class="notify-icon-container">
-        <div class="badge" style="border-color:${color.border};background:${color.bg}">
-          ${iconSVG('#1f2937')}
+        <div class="badge">
+          ${iconSVG(variant)}
         </div>
       </div>
       <div class="notify-content">
         <h3 class="notify-title">${title}</h3>
         <p class="notify-text">${message}</p>
-        <div class="notify-progress" style="background:${color.main}"></div>
+        <div class="notify-progress"></div>
       </div>
     </div>
   `;
@@ -46,8 +56,7 @@ function push({type='info', title='Powiadomienie', message='', length=3000, posi
   lists[position].appendChild(li);
 
   // progress bar
-  const bar = li.querySelector('.notify-progress');
-  requestAnimationFrame(() => requestAnimationFrame(() => bar.style.width = '100%'));
+  requestAnimationFrame(() => li.classList.add('animating'));
 
   // optional sound
   if (sound) {
@@ -67,6 +76,7 @@ function push({type='info', title='Powiadomienie', message='', length=3000, posi
 
   const closeAt = Number(length) > 0 ? Number(length) : 3000;
   const card = li.querySelector('.notify');
+  card.style.setProperty('--notify-length', `${closeAt}ms`);
   const to = setTimeout(() => {
     card.classList.add('fadeOut');
     setTimeout(() => li.remove(), 420);

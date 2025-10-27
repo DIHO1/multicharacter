@@ -1,1 +1,28 @@
 # multicharacter
+
+## Dodawanie projektu na GitHub
+1. Wejdź do katalogu zasobu w terminalu (np. `cd /ścieżka/do/multicharacter`).
+2. Zainicjuj repozytorium Git (jeśli jeszcze tego nie zrobiłeś):
+   ```bash
+   git init
+   ```
+3. Dodaj zdalne repozytorium GitHub (podmień `twoj-uzytkownik` i `twoje-repo`):
+   ```bash
+   git remote add origin https://github.com/twoj-uzytkownik/twoje-repo.git
+   ```
+4. Sprawdź status plików i dodaj je do commita:
+   ```bash
+   git status
+   git add .
+   ```
+5. Utwórz commit z opisem zmian:
+   ```bash
+   git commit -m "Pierwsza wersja multicharacter"
+   ```
+6. Wyślij commit na GitHub (gałąź `main` lub inna, jeśli używasz innej nazwy):
+   ```bash
+   git push -u origin main
+   ```
+7. Przy kolejnych aktualizacjach powtarzaj kroki 4–6 (zaktualizuj wiadomość commita zgodnie ze zmianami).
+
+> Jeśli repozytorium na GitHubie jest już zainicjowane z plikami (np. README), zanim wykonasz `git push`, pobierz je lokalnie poleceniem `git pull --rebase origin main`, aby uniknąć konfliktów.
